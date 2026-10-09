@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Behavioral Theory of the Firm — Interactive Landscape Dashboard</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background-color: #090d16;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #f8fafc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .poster-container {
+    width: 1280px;
+    height: 720px;
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 12px 20px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+  }
+  .header-title h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .header-title h1 span {
+    color: #38bdf8;
+    font-size: 14px;
+    font-weight: 600;
+    background: rgba(56, 189, 248, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+  }
+  .header-title p {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  .header-badge {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Grid Layout */
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 16px;
+    flex-grow: 1;
+    min-height: 0;
+  }
+
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Card Components */
+  .card {
+    background: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .card-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Section 1: Paradigm Toggle */
+  .toggle-switch {
+    display: flex;
+    background: #0f172a;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 10px;
+  }
+  .toggle-btn {
+    flex: 1;
+    padding: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+  }
+  .toggle-btn.active {
+    background: #2563eb;
+    color: #ffffff;
+  }
+
+  .paradigm-content {
+    font-size: 10.5px;
+    line-height: 1.4;
+    color: #cbd5e1;
+    min-height: 80px;
+  }
+  .paradigm-point {
+    margin-bottom: 6px;
+    padding-left: 10px;
+    border-left: 2px solid #38bdf8;
+  }
+
+  /* Section 2: Interactive Pillar Selector */
+  .pillar-tabs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .pillar-tab {
+    background: #0f172a;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pillar-tab:hover, .pillar-tab.active {
+    border-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+  }
+  .pillar-tab h4 {
+    font-size: 10px;
+    color: #f8fafc;
+    margin-bottom: 2px;
+  }
+  .pillar-tab span {
+    font-size: 8.5px;
+    color: #64748b;
+  }
+
+  .pillar-display {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    flex-grow: 1;
+  }
+  .pillar-display h4 {
+    font-size: 11px;
+    color: #38bdf8;
+    margin-bottom: 4px;
+  }
+  .pillar-display p {
+    font-size: 10px;
+    color: #94a3b8;
+    line-height: 1.35;
+  }
+
+  /* Section 3: Coalition Vectors */
+  .coalition-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .coalition-item {
+    background: #0f172a;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .coalition-item:hover {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.05);
+  }
+  .coalition-item label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #e2e8f0;
+    cursor: pointer;
+  }
+  .coalition-item span {
+    font-size: 9px;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* Section 4: Interactive Slack Buffer Simulator */
+  .slider-box {
+    margin-top: 6px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9.5px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+  }
+  input[type=range] {
+    width: 100%;
+    accent-color: #10b981;
+  }
+  .slack-indicator {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    text-align: center;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  /* Takeaways */
+  .takeaway-box {
+    background: rgba(16, 185, 129, 0.05);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .takeaway-item {
+    font-size: 9.5px;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    line-height: 1.3;
+  }
+  .takeaway-item:last-child { margin-bottom: 0; }
+  .takeaway-item i { color: #10b981; margin-top: 2px; }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 9px;
+    color: #64748b;
+  }
+</style>
+</head>
+<body>
+
+<div class="poster-container">
+  
+  <!-- Header -->
+  <div class="header">
+    <div class="header-title">
+      <h1>A Behavioral Theory of the Firm <span>Cyert &amp; March (1963)</span></h1>
+      <p>Interactive Landscape Executive Dashboard &amp; Decision Framework</p>
+    </div>
+    <span class="header-badge">Interactive Dashboard</span>
+  </div>
+
+  <!-- Main 3-Column Layout -->
+  <div class="main-grid">
+    
+    <!-- COLUMN 1: Foundations & Core Paradigm -->
+    <div class="column">
+      
+      <!-- Card: Paradigm Comparison -->
+      <div class="card">
+        <div class="card-title">
+          <span><i class="fa-solid fa-code-compare"></i> Paradigm Shift</span>
+        </div>
+        <div class="toggle-switch">
+          <button class="toggle-btn active" id="btn-neoclassical" onclick="setParadigm('neoclassical')">Neoclassical Model</button>
+          <button class="toggle-btn" id="btn-behavioral" onclick="setParadigm('behavioral')">Behavioral Reality</button>
+        </div>
+        <div class="paradigm-content" id="paradigm-text">
+          <!-- Dynamic JS content -->
+        </div>
+      </div>
+
+      <!-- Card: Multi-Headed Coalition -->
+      <div class="card" style="flex-grow: 1;">
+        <div class="card-title">
+          <span><i class="fa-solid fa-users-viewfinder"></i> Coalition Vectors</span>
+        </div>
+        <p style="font-size: 9.5px; color: #94a3b8; margin-bottom: 8px;">
+          Firms comprise competing sub-coalitions with distinct internal objectives:
+        </p>
+        <div class="coalition-list">
+          <div class="coalition-item" onclick="showVector('Production', 'Focuses on smooth scheduling, avoiding downtime, and maintaining assembly line efficiency.')">
+            <label>Production Goals</label>
+            <span>Schedule Stability</span>
+          </div>
+          <div class="coalition-item" onclick="showVector('Inventory', 'Buffers against stockouts while balancing expensive inventory holding costs.')">
+            <label>Inventory Goals</label>
+            <span>Buffer Cushion</span>
+          </div>
+          <div class="coalition-item" onclick="showVector('Sales', 'Drives volume, customer retention, and broad product portfolio expansion.')">
+            <label>Sales Goals</label>
+            <span>Growth &amp; Reach</span>
+          </div>
+          <div class="coalition-item" onclick="showVector('Profit', 'Satisfies investor demands, dividend expectations, and long-term capital returns.')">
+            <label>Profit Goals</label>
+            <span>Capital Return</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUMN 2: Analytical Pillars Interactive -->
+    <div class="column">
+      
+      <div class="card" style="height: 100%;">
+        <div class="card-title">
+          <span><i class="fa-solid fa-sitemap"></i> Four Decision Pillars</span>
+          <span style="font-size: 9px; color: #64748b; font-weight: normal;">Click a pillar to inspect</span>
+        </div>
+
+        <div class="pillar-tabs">
+          <div class="pillar-tab active" id="tab-0" onclick="setPillar(0)">
+            <h4>1. Quasi-Resolution</h4>
+            <span>Conflict Management</span>
+          </div>
+          <div class="pillar-tab" id="tab-1" onclick="setPillar(1)">
+            <h4>2. Uncertainty Avoidance</h4>
+            <span>Risk Control</span>
+          </div>
+          <div class="pillar-tab" id="tab-2" onclick="setPillar(2)">
+            <h4>3. Problemistic Search</h4>
+            <span>Target Failures</span>
+          </div>
+          <div class="pillar-tab" id="tab-3" onclick="setPillar(3)">
+            <h4>4. Organizational Learning</h4>
+            <span>Routine Adaptation</span>
+          </div>
+        </div>
+
+        <div class="pillar-display" id="pillar-display">
+          <!-- Dynamic JS Content -->
+        </div>
+
+        <!-- Interactive Vector Inspector Box -->
+        <div style="margin-top: 10px; background: rgba(56, 189, 248, 0.05); border: 1px dashed rgba(56, 189, 248, 0.2); border-radius: 8px; padding: 10px;">
+          <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; color: #38bdf8; font-weight: 700; margin-bottom: 2px;">
+            Vector Inspector
+          </div>
+          <div id="vector-detail" style="font-size: 10px; color: #cbd5e1;">
+            Select a coalition vector from Column 1 to inspect its specific operational rationale.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- COLUMN 3: Organizational Slack & Strategic Applications -->
+    <div class="column">
+      
+      <!-- Card: Organizational Slack Simulator -->
+      <div class="card">
+        <div class="card-title">
+          <span><i class="fa-solid fa-shield-heart"></i> Organizational Slack</span>
+        </div>
+        <p style="font-size: 9.5px; color: #94a3b8;">
+          Adjust market volatility to simulate how slack acts as an operational shock absorber:
+        </p>
+
+        <div class="slider-box">
+          <div class="slider-label">
+            <span>Market Volatility Level</span>
+            <span id="slider-val">Medium</span>
+          </div>
+          <input type="range" id="volatility-slider" min="1" max="3" value="2" oninput="updateSlackSim(this.value)">
+        </div>
+
+        <div class="slack-indicator" id="slack-status" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3);">
+          Slack Cushion Active: Shock Absorbed
+        </div>
+      </div>
+
+      <!-- Card: Strategic Takeaways -->
+      <div class="card" style="flex-grow: 1;">
+        <div class="card-title">
+          <span><i class="fa-solid fa-lightbulb"></i> Strategic Takeaways</span>
+        </div>
+        
+        <div class="takeaway-box">
+          <div class="takeaway-item">
+            <i class="fa-solid fa-check"></i>
+            <div><b>Embrace Internal Conflict:</b> Accept opposing departmental goals; focus on constructive arbitration.</div>
+          </div>
+          <div class="takeaway-item">
+            <i class="fa-solid fa-check"></i>
+            <div><b>Redesign SOPs:</b> Real change happens by updating default operational routines, not by issuing top-down mandates.</div>
+          </div>
+          <div class="takeaway-item">
+            <i class="fa-solid fa-check"></i>
+            <div><b>Protect Strategic Slack:</b> Micro-optimizing away all excess capacity destroys resilience during unexpected crises.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>A Behavioral Theory of the Firm — Executive Interactive Poster</span>
+    <span>Use interactive controls to explore framework dynamics</span>
+  </div>
+
+</div>
+
+<script>
+  // 1. Paradigm Toggle Logic
+  const paradigms = {
+    neoclassical: `
+      <div class="paradigm-point"><b>Omniscient Rationality:</b> Assumes complete information, perfect market foresight, and infinite processing capacity.</div>
+      <div class="paradigm-point"><b>Profit Maximization:</b> Single economic objective function governing all choices.</div>
+      <div class="paradigm-point"><b>Monolithic Entity:</b> Treats the firm as a single frictionless, unified decision-maker.</div>
+    `,
+    behavioral: `
+      <div class="paradigm-point"><b>Bounded Rationality:</b> Cognitive limits and search costs lead to satisficing ("good enough") choices.</div>
+      <div class="paradigm-point"><b>Multiple Goals:</b> Continuously arbitrates competing demands across organizational units.</div>
+      <div class="paradigm-point"><b>Political Coalition:</b> Decisions emerge from negotiation, bargaining, and coalition-building.</div>
+    `
+  };
+
+  function setParadigm(type) {
+    document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+    if (type === 'neoclassical') {
+      document.getElementById('btn-neoclassical').classList.add('active');
+    } else {
+      document.getElementById('btn-behavioral').classList.add('active');
+    }
+    document.getElementById('paradigm-text').innerHTML = paradigms[type];
+  }
+
+  // Initialize Paradigm view
+  document.getElementById('paradigm-text').innerHTML = paradigms.neoclassical;
+
+  // 2. Pillars Tab Logic
+  const pillars = [
+    {
+      title: "1. Quasi-Resolution of Conflict",
+      desc: "Organizations don't resolve conflict by creating perfectly unified goals. Instead, they decompose problems into local sub-goals and attend to conflicting demands sequentially over time."
+    },
+    {
+      title: "2. Uncertainty Avoidance",
+      desc: "Firms prefer short-run feedback cycles and negotiated environments (e.g., standard supply contracts or industry norms) rather than relying on uncertain long-term forecasts."
+    },
+    {
+      title: "3. Problemistic Search",
+      desc: "Search is triggered when a specific target or aspiration level fails. It is localized, conservative, and continues only until a satisfying solution is discovered."
+    },
+    {
+      title: "4. Organizational Learning",
+      desc: "Firms adapt over time. Success leads to higher aspiration targets; failure lowers them. Standard Operating Procedures (SOPs) evolve based on accumulated experience."
+    }
+  ];
+
+  function setPillar(index) {
+    document.querySelectorAll('.pillar-tab').forEach((tab, i) => {
+      if(i === index) tab.classList.add('active');
+      else tab.classList.remove('active');
+    });
+
+    const display = document.getElementById('pillar-display');
+    display.innerHTML = `
+      <h4>${pillars[index].title}</h4>
+      <p>${pillars[index].desc}</p>
+    `;
+  }
+
+  // Initialize Pillar View
+  setPillar(0);
+
+  // 3. Coalition Vector Inspector
+  function showVector(name, desc) {
+    document.getElementById('vector-detail').innerHTML = `<b>${name} Vector:</b> ${desc}`;
+  }
+
+  // 4. Slack Simulator Logic
+  function updateSlackSim(val) {
+    const valText = document.getElementById('slider-val');
+    const status = document.getElementById('slack-status');
+    
+    if (val == 1) {
+      valText.innerText = 'Low (Stable)';
+      status.innerText = 'Excess Slack Available: High Innovation & R&D';
+      status.style.background = 'rgba(56, 189, 248, 0.15)';
+      status.style.color = '#38bdf8';
+      status.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+    } else if (val == 2) {
+      valText.innerText = 'Medium';
+      status.innerText = 'Slack Cushion Active: Market Shock Absorbed';
+      status.style.background = 'rgba(16, 185, 129, 0.15)';
+      status.style.color = '#34d399';
+      status.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+    } else {
+      valText.innerText = 'High (Crisis)';
+      status.innerText = 'Slack Depleted: Severe Vulnerability to Volatility';
+      status.style.background = 'rgba(239, 68, 68, 0.15)';
+      status.style.color = '#f87171';
+      status.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+    }
+  }
+</script>
+
+</body>
+</html>
